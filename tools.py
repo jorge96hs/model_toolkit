@@ -27,6 +27,9 @@ def coerce_str_len(string, out_len = 2, fill = '0', fill_dir = 'left'):
     elif fill_dir == 'right':
         newstr = string + filler
 
+    else:
+        raise ValueError('fill_dir debe ser uno de los siguientes valores: {left, right}')
+
     return newstr
 
 
@@ -266,7 +269,7 @@ def date_add_day(date, n = 1, weekdays = False, holidays = []):
 
     if n >= 0:
         sign = 1
-    elif n < 0:
+    else:
         sign = -1
 
     if weekdays:
@@ -283,10 +286,14 @@ def date_add_day(date, n = 1, weekdays = False, holidays = []):
 
 def date_add_weekday(date, n = 1, holidays = []):
     """
-    Calculates the date that is n days away from the provided date. Omits weekends.
-    :param date date: Reference date
-    :param int n: Number of days before (n < 0) or after (n > 0) reference date
-    :return: Date n days away from the provided date
+    Add or subtract weekdays to a given date, considering specified holidays.
+
+    :param date date: The input date to be modified
+    :param int n: The number of weekdays to add or subtract (positive values add days, negative values subtract days)
+    :param list[str] holidays: A list of holiday dates as strings in the format 'YYYY-MM-DD' to be skipped when
+    adding or subtracting days
+    :return: The resulting date after adding or subtracting the specified number of weekdays, considering the provided
+    holidays
     :rtype: date
     """
     return date_add_day(date, n = n, weekdays = True, holidays = holidays)
@@ -425,5 +432,24 @@ def infer_ext(path):
     :rtype: str
     """
     return path.split(sep = '.')[-1]
+
+
+def get_from_dict(dictionary, key, if_fail = ''):
+    """
+    Get the value for a specified key from a dictionary. Return a default value if the key is not present.
+
+    :param dict dictionary: The dictionary to retrieve the value from
+    :param key: The key to look for in the dictionary
+    :type key: str or int
+    :param if_fail: The default value to return if the key is not found in the dictionary
+    :type if_fail: Any
+    :return: The value corresponding to the provided key in the dictionary or the default value if the key is not found
+    :rtype: Any
+    """
+    if key in dictionary.keys():
+        return dictionary[key]
+
+    else:
+        return if_fail
 
 
