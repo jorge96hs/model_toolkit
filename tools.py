@@ -404,7 +404,16 @@ def get_from_sql(engine, query, close_con = True, **kwargs):
     return df
 
 
-def df_to_sql(df, engine, dest_table, if_exists = 'fail', schema = 'temp', index = False, close_con = True):
+def df_to_sql(
+        df,
+        engine,
+        dest_table,
+        if_exists = 'fail',
+        schema = 'temp',
+        index = False,
+        close_con = True,
+        **kwargs
+):
     """
     Write a dataframe to a SQL database
     :param df: A pandas.DataFrame
@@ -419,7 +428,7 @@ def df_to_sql(df, engine, dest_table, if_exists = 'fail', schema = 'temp', index
     :param bool close_con: Whether to close the connection after writing the table
     :return: None
     """
-    df.to_sql(dest_table, engine, if_exists = if_exists, index = index, schema = schema)
+    df.to_sql(dest_table, engine, if_exists = if_exists, index = index, schema = schema, **kwargs)
     if close_con:
         engine.dispose()
 
