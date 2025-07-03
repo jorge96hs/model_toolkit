@@ -462,3 +462,38 @@ def get_from_dict(dictionary, key, if_fail = ''):
         return if_fail
 
 
+def df_to_fwf(df, filename, file_lengths):
+    """
+    Write a DataFrame to a fixed-width formatted (FWF) text file.
+
+    Parameters:
+    - df: pandas DataFrame
+        The DataFrame to be written to the file.
+    - filename: str
+        The name of the file to be created or overwritten.
+    - file_lengths: list of int or str
+        A list specifying the width of each column in the output file.
+        If an element is an integer, it represents the fixed width for the corresponding column.
+        If an element is a string containing a dot ('.'), it indicates a float column with decimal places.
+        The integer part represents the width, and the decimal part represents the number of digits after the decimal point.
+    """
+    with open(filename, 'w', encoding='latin1') as f:
+        for _, row in df.iterrows():
+            line = ''
+            for col, length in zip(row, file_lengths):
+                if '.' in str(length):  # Check if length is a float with decimal places
+                    split_length = length.split('.')
+                    length = int(split_length[0])
+                    digits = int(split_length[1])
+                    col = round(col, digits)
+                else:
+                    length = int(length)
+
+                # Format the column value and append it to the line
+                line += str(col).ljust(length)
+
+            # Write the formatted line to the file
+            f.write(line + '\n')
+
+    # Close the file after all lines have been written
+    f.close()
